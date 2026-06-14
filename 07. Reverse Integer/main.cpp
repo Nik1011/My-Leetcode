@@ -1,44 +1,37 @@
 #include <iostream>
-#include <cmath>
 #include <string>
-
+#include <stdexcept>
 
 class Solution{
 public:
     int reverse(int x){
 
+        if(x == 0){
+            return 0;
+        }
+
         std::string int_to_string = std::to_string(x);
-        std::string result = {};
+        std::string current_String = {};
+        int result = 0;
+
         if(int_to_string[0] == '-'){
             // negativ number 
-            result += "-";
+            current_String += "-";
         }
         for (int i = int_to_string.size() -1; i >= 0 ; i--)
         {
-            result += int_to_string[i];
+            current_String += int_to_string[i];
+        }
+        // check if number is Overflow of 32Bit
+        try{
+            result = std::stoi(current_String);
+        }catch (const std::invalid_argument& e){
+            return 0;
+        }catch (const std::out_of_range& e){
+            return 0;
         }
 
-        
-        return (int)std::stoi(result);
-    }
-
-    int bitSize(int x){
-
-        int size = 0;
-        for (int i = 0; i < 33; i++)
-        {
-            int zweierPotenz = 1 << i;
-            int division = x / zweierPotenz;
-            //std::cout << division << std::endl;
-
-            if( division >= 1){
-                size += 1;
-            }
-            else{
-                break;
-            }
-        }
-        return size;   
+        return result;
     }
 };
 
@@ -47,7 +40,6 @@ int main(){
 
     Solution sol;
     int test = 1534236469;
-    //std::cout << "Reverse the number Result: " << sol.reverse(test) << std::endl; 
-    sol.bitSize(test);
+    std::cout << "Erwarte Overflow, also 0 als Ergebnis: " << sol.reverse(test) << std::endl;
     return 0;
 }
